@@ -1,0 +1,21 @@
+---
+import { event, clubs } from "../data/event";
+---
+
+<footer class="bg-hero border-t border-ink">
+  <div class="wrap grid gap-10 py-16 md:grid-cols-[1.4fr_1fr] md:items-end">
+    <div>
+      <p class="display text-3xl sm:text-4xl">명품스터디클럽<br />연합 학술 박람회</p>
+      <p class="mt-5 font-semibold">{event.date} · {event.time}</p>
+      <p class="text-muted">{event.venue} ({event.venueNote})</p>
+      {event.contactEmail && <p class="mt-2">문의 <a class="font-semibold underline underline-offset-4" href={`mailto:${event.contactEmail}`}>{event.contactEmail}</a></p>}
+    </div>
+    <div class="md:text-right">
+      <p class="text-sm font-bold tracking-[0.08em]">공동 주최</p>
+      <p class="mt-1 text-lg font-extrabold tracking-tight">{clubs.map((c) => c.name).join(" · ")}</p>
+      <p class="mt-6 text-xs text-muted">
+        Built with Astro · Based on <a class="underline" href="https://github.com/99points/astrojs-event-template" target="_blank" rel="noopener">AstroEvent</a> (MIT)
+      </p>
+    </div>
+  </div>
+</footer>

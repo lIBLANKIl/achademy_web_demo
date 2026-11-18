@@ -1,0 +1,68 @@
+---
+import { formats, clubs } from "../data/event";
+
+// 행사 구성별 아이콘 (그라데이션 원 + 라인 드로잉)
+const icons = [
+  // 성과발표회: 전시 보드
+  `<rect x="15" y="16" width="26" height="20" rx="1.5"/><path d="M22 36v7M34 36v7M19 22h10M19 27h16M19 31h12"/>`,
+  // Oral: 마이크
+  `<rect x="23" y="12" width="10" height="18" rx="5"/><path d="M18 26a10 10 0 0 0 20 0M28 36v7M22 43h12"/>`,
+  // Keynote: 스포트라이트
+  `<path d="M28 11l4.2 8.6 9.4 1.4-6.8 6.6 1.6 9.4L28 32.6 19.6 37l1.6-9.4-6.8-6.6 9.4-1.4z"/>`,
+  // Poster: 두 개의 포스터
+  `<rect x="12" y="15" width="14" height="19" rx="1.5"/><rect x="30" y="15" width="14" height="19" rx="1.5"/><path d="M19 34v8M37 34v8"/>`,
+  // Networking: 연결 노드
+  `<circle cx="17" cy="20" r="4.5"/><circle cx="39" cy="20" r="4.5"/><circle cx="28" cy="38" r="4.5"/><path d="M21.5 20h13M19.5 24l6.3 10.2M36.5 24l-6.3 10.2"/>`,
+];
+---
+
+<section class="bg-night text-white">
+  <div class="wrap py-20 sm:py-24">
+    <h2 class="h-section">행사 구성</h2>
+    <p class="mt-4 text-xl font-bold">하루 동안 이렇게 진행됩니다…</p>
+
+    <ul class="mt-10 divide-y divide-white/12">
+      {formats.map((f, i) => (
+        <li class="grid gap-x-10 gap-y-3 py-6 md:grid-cols-[minmax(0,320px)_1fr] md:items-center">
+          <div class="flex items-center gap-4">
+            <svg aria-hidden="true" viewBox="0 0 56 56" class="size-14 shrink-0">
+              <defs><linearGradient id={`fi-${i}`} x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d4e87a" /><stop offset="1" stop-color="#7fd0ea" /></linearGradient></defs>
+              <circle cx="28" cy="28" r="22" fill={`url(#fi-${i})`} opacity=".9" />
+              <g fill="none" stroke="#070b11" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" set:html={icons[i % icons.length]} />
+            </svg>
+            <span class="text-2xl font-medium tracking-tight">{f.title}</span>
+            <span class="text-xs font-semibold tracking-[0.12em] text-white/45 uppercase">{f.tag}</span>
+          </div>
+          <p class="text-[15px] leading-relaxed text-white/65">{f.points.join(" · ")}</p>
+        </li>
+      ))}
+    </ul>
+
+    <div id="clubs" class="scroll-mt-24 pt-24">
+      <h2 class="h-section">참여 학회</h2>
+      <p class="mt-4 max-w-2xl text-white/65">세 학회 운영진 12명 이상이 함께 기획·운영합니다. 학회 소개는 당일 키노트에 이어 진행됩니다.</p>
+
+      <ul class="mt-14 grid gap-14 sm:grid-cols-2 lg:grid-cols-3">
+        {clubs.map((c, i) => (
+          <li class="text-center">
+            <div
+              class:list={[
+                "mx-auto grid aspect-square w-48 place-items-center rounded-full sm:w-56",
+                i === 0 && "bg-grad text-ink",
+                i === 1 && "bg-white text-ink",
+                i === 2 && "border-2 border-white/80 text-white",
+              ]}
+            >
+              <span class="display text-3xl sm:text-4xl">{c.name}</span>
+            </div>
+            <p class="mt-6 text-lg font-bold tracking-[0.06em]">{c.name}</p>
+            <p class="mt-1 text-sm tracking-[0.04em] text-white/70">{c.fullName}</p>
+            <p class="text-sm tracking-[0.04em] text-white/45">{c.affiliation}</p>
+            <p class="mx-auto mt-4 max-w-xs text-[15px] leading-relaxed text-white/60">{c.description}</p>
+            {c.url && <a href={c.url} target="_blank" rel="noopener" class="mt-4 inline-block text-sm font-semibold underline underline-offset-4">학회 페이지 ›</a>}
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>

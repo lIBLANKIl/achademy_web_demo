@@ -1,0 +1,43 @@
+---
+import { program, boothTrack, type ProgramKind } from "../data/event";
+
+const tag: Partial<Record<ProgramKind, string>> = {
+  oral: "Oral",
+  poster: "Poster",
+  stage: "Main stage",
+  network: "Networking",
+};
+---
+
+<section id="program" class="bg-white">
+  <div class="wrap py-20 sm:py-28">
+    <h2 class="h-section inline-block border-b border-ink pr-16 pb-5">2027 프로그램</h2>
+
+    <div class="bg-grad mt-10 flex flex-col gap-1 rounded-[3px] border border-ink px-5 py-4 sm:flex-row sm:items-center sm:gap-6">
+      <span class="font-mono text-lg font-bold tabular-nums">{boothTrack.start} — {boothTrack.end}</span>
+      <span class="font-bold">{boothTrack.title}</span>
+      <span class="text-sm font-medium text-ink/70">{boothTrack.note}</span>
+    </div>
+
+    <ol class="mt-4">
+      {program.map((p) => (
+        <li class="grid gap-x-8 gap-y-2 border-b border-ink py-7 md:grid-cols-[250px_1fr_260px] md:py-9">
+          <time class="text-2xl font-normal tracking-tight tabular-nums sm:text-[28px]">{p.start} — {p.end}</time>
+          <div>
+            <p class="text-xl leading-snug font-medium tracking-tight sm:text-[22px]">{p.title}</p>
+            {tag[p.kind] && (
+              <span class:list={[
+                "mt-2 inline-block rounded-[3px] px-2 py-0.5 text-[11px] font-bold tracking-[0.08em] uppercase",
+                p.kind === "oral" || p.kind === "poster" ? "bg-grad border border-ink" : "border border-ink/30 text-muted",
+              ]}>{tag[p.kind]}</span>
+            )}
+          </div>
+          <p class="text-base leading-relaxed">
+            {p.who}<br /><span class="text-muted">{p.note}</span>
+          </p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-6 text-sm text-muted">우수 발표회는 사전 선정된 9팀을 3팀씩 3개 세션으로, 포스터 발표는 전체 부스가 동시에 총 2회 진행합니다. 세부 일정은 운영 상황에 따라 바뀔 수 있습니다.</p>
+  </div>
+</section>

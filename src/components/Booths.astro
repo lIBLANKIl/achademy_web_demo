@@ -1,0 +1,23 @@
+---
+import { boothGuide } from "../data/event";
+---
+
+<section id="booths" class="bg-hero border-t border-ink">
+  <div class="wrap py-20 sm:py-28">
+    <h2 class="h-section">부스 관람 안내</h2>
+    <p class="mt-6 max-w-3xl text-lg leading-relaxed font-medium sm:text-xl">
+      부스는 12:10부터 17:50까지 상시 운영됩니다. 포스터 발표 시간에 맞춰 가면 발표자의 설명을 집중해서 들을 수 있어요.
+    </p>
+
+    <ol class="mt-12 grid border-t border-ink md:grid-cols-2">
+      {boothGuide.map((g, i) => (
+        <li class:list={["border-b border-ink py-8 md:pr-10", i % 2 === 1 && "md:border-l md:pl-10"]}>
+          <span class="display text-grad text-5xl">{String(i + 1).padStart(2, "0")}</span>
+          <h3 class="mt-3 text-xl font-extrabold tracking-tight">{g.title}</h3>
+          <p class="mt-2 leading-relaxed text-muted">{g.body}</p>
+        </li>
+      ))}
+    </ol>
+    <p class="mt-8 text-muted">부스 배치도는 장소가 확정되면 공개합니다.</p>
+  </div>
+</section>

@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, "Apple SD Gothic Neo", "Noto Sans KR", sans-serif;
+
+  --color-ink: #0a0d12;        /* 본문·제목 (네이비 기운의 블랙) */
+  --color-night: #070b11;      /* 다크 섹션 배경 */
+  --color-muted: #4b525b;
+  --color-soft: #8a929c;
+  --color-lime: #d4e87a;       /* 그라데이션 시작 (연두) */
+  --color-mint: #9fdcc4;
+  --color-sky: #a3dcef;        /* 그라데이션 끝 (시안) */
+  --color-mist: #e6f6fa;
+  --color-green: #1d5c46;      /* 성균관대 계열 그린 (포인트 텍스트) */
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white text-ink font-sans antialiased;
+    word-break: keep-all;
+    overflow-wrap: break-word;
+  }
+  ::selection { background: var(--color-lime); color: var(--color-ink); }
+  :focus-visible { @apply outline-2 outline-offset-2 outline-ink; }
+}
+
+@utility wrap { @apply mx-auto w-full max-w-6xl px-4 sm:px-8; }
+@utility display { @apply font-extrabold tracking-[-0.035em] leading-[1.05]; }
+@utility h-section { @apply display text-4xl sm:text-5xl; }
+@utility bg-grad { background-image: linear-gradient(90deg, var(--color-lime), var(--color-sky)); }
+@utility bg-hero {
+  background:
+    radial-gradient(60% 80% at 100% 0%, #c6eef6 0%, transparent 70%),
+    radial-gradient(50% 60% at 100% 100%, #d3f1f7 0%, transparent 70%),
+    linear-gradient(100deg, #ffffff 35%, #e3f5f9 100%);
+}
+@utility text-grad {
+  background-image: linear-gradient(90deg, #b6d84f, #6cc9e6);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+@utility btn-grad {
+  @apply bg-grad inline-flex items-center gap-3 rounded-[3px] border border-ink px-6 py-3.5 text-[15px] font-medium tracking-[0.06em] text-ink transition;
+  &:hover { filter: saturate(1.25) brightness(1.03); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

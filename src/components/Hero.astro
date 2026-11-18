@@ -1,0 +1,103 @@
+---
+import { event, purposes, stats } from "../data/event";
+---
+
+<div id="top" class="bg-hero">
+  <section class="wrap grid items-center gap-10 pt-14 pb-16 sm:pt-20 lg:grid-cols-[1.15fr_1fr] lg:pb-24">
+    <div>
+      <p class="inline-flex items-center gap-2 text-sm font-bold tracking-[0.04em]">
+        <span>SKKAI × brAIn × DScover</span>
+        <span id="dday" data-date={event.dateISO} class="rounded-[3px] bg-ink px-2 py-0.5 text-xs text-white"></span>
+      </p>
+      <h1 class="display mt-5 text-[clamp(2.6rem,6.6vw,5.4rem)]">
+        명품스터디클럽<br />연합 학술 박람회
+      </h1>
+      <p class="mt-5 text-lg font-bold">3개 학회가 함께 여는 학생 주도형 연합 학술 행사</p>
+      <p class="mt-6 text-2xl font-extrabold tracking-tight sm:text-3xl">일시: 2027년 1월 9일 (토)</p>
+      <p class="mt-2 text-base font-medium text-muted">{event.time} · {event.venue} ({event.venueNote})</p>
+
+      <div class="mt-9 flex flex-col items-start gap-4">
+        {event.registerUrl ? (
+          <a href={event.registerUrl} target="_blank" rel="noopener" class="btn-grad">참관 신청하기 <span aria-hidden="true">›</span></a>
+        ) : (
+          <span class="btn-grad cursor-default">참관 신청 · 오픈 예정 <span aria-hidden="true">›</span></span>
+        )}
+        <a href="#program" class="btn-grad">프로그램 보기 <span aria-hidden="true">›</span></a>
+      </div>
+    </div>
+
+    <!-- 세 학회의 연결을 표현한 노드 그래프 일러스트 -->
+    <svg viewBox="0 0 520 440" class="mx-auto w-full max-w-[520px]" role="img" aria-label="SKKAI, brAIn, DScover 세 학회를 잇는 연결 그래프">
+      <defs>
+        <linearGradient id="g-node" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stop-color="#d4e87a" /><stop offset="1" stop-color="#8fd6ec" />
+        </linearGradient>
+        <linearGradient id="g-stripe" x1="0" x2="1">
+          <stop offset="0" stop-color="#d4e87a" /><stop offset="1" stop-color="#a3dcef" />
+        </linearGradient>
+        <radialGradient id="g-cloud" cx="0.5" cy="0.5" r="0.5">
+          <stop offset="0" stop-color="#bfe9f3" /><stop offset="1" stop-color="#bfe9f3" stop-opacity="0" />
+        </radialGradient>
+      </defs>
+      <ellipse cx="300" cy="200" rx="230" ry="190" fill="url(#g-cloud)" />
+
+      <!-- 연결선 -->
+      <g fill="none" stroke="#0a0d12" stroke-width="2">
+        <path d="M150 140 L370 120" />
+        <path d="M150 140 L270 330" />
+        <path d="M370 120 L270 330" />
+        <path d="M370 120 L470 60" stroke-opacity=".5" />
+        <path d="M270 330 L410 395" stroke-opacity=".5" />
+        <path d="M150 140 L55 95" stroke-opacity=".5" />
+        <path d="M150 140 L70 260" stroke-opacity=".5" />
+        <path d="M370 120 L460 230" stroke-opacity=".5" />
+        <path d="M270 330 L140 400" stroke-opacity=".5" />
+      </g>
+      <!-- 융합 영역 -->
+      <path d="M150 140 L370 120 L270 330 Z" fill="url(#g-stripe)" fill-opacity=".35" />
+      <g stroke="#0a0d12" stroke-width="2" fill="#fff">
+        <circle cx="470" cy="60" r="7" /><circle cx="410" cy="395" r="7" /><circle cx="55" cy="95" r="7" />
+        <circle cx="70" cy="260" r="7" /><circle cx="460" cy="230" r="7" /><circle cx="140" cy="400" r="7" />
+      </g>
+      <g fill="#0a0d12"><circle cx="263" cy="196" r="9" /></g>
+
+      <!-- 세 학회 노드 -->
+      <g font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="800" text-anchor="middle">
+        <circle cx="150" cy="140" r="58" fill="url(#g-node)" stroke="#0a0d12" stroke-width="2" />
+        <text x="150" y="147" font-size="21" fill="#0a0d12">SKKAI</text>
+        <circle cx="370" cy="120" r="58" fill="#fff" stroke="#0a0d12" stroke-width="2" />
+        <text x="370" y="127" font-size="21" fill="#0a0d12">brAIn</text>
+        <circle cx="270" cy="330" r="58" fill="#0a0d12" />
+        <text x="270" y="337" font-size="20" fill="#fff">DScover</text>
+      </g>
+    </svg>
+  </section>
+
+  <section id="about" class="wrap pb-20 sm:pb-24">
+    <div class="max-w-4xl">
+      <h2 class="h-section">행사 목적</h2>
+      <p class="mt-6 text-lg leading-[1.75] font-medium sm:text-xl">
+        {purposes.map((p) => p.body).join(" ")}
+      </p>
+    </div>
+    <dl class="mt-14 grid grid-cols-3 border-t border-ink">
+      {stats.map((s) => (
+        <div class="py-6 pr-3">
+          <dd class="display text-4xl sm:text-5xl">{s.value}</dd>
+          <dt class="mt-2 text-sm font-semibold text-muted">{s.label}</dt>
+        </div>
+      ))}
+    </dl>
+  </section>
+</div>
+
+<script>
+  const el = document.getElementById("dday");
+  if (el?.dataset.date) {
+    const target = new Date(el.dataset.date);
+    const today = new Date();
+    const startOf = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
+    const diff = Math.round((startOf(target) - startOf(today)) / 86400000);
+    el.textContent = diff > 0 ? `D-${diff}` : diff === 0 ? "D-DAY" : "행사 종료";
+  } else el?.remove();
+</script>
