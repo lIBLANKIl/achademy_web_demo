@@ -1,5 +1,5 @@
 ---
-import { event, purposes, stats, clubs } from "../data/event";
+import { event, purposes, stats, clubs, registerForm } from "../data/event";
 
 const logoBase = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}logos/`;
 const R = 64; // 노드 반지름 (로고가 잘 보이도록 기존 58에서 키움)
@@ -25,13 +25,12 @@ const nodes = [
       <p class="mt-2 text-base font-medium text-muted">{event.time} · {event.venue} ({event.venueNote})</p>
 
       <div class="mt-9 flex flex-col items-start gap-4">
-        {event.registerUrl ? (
-          <a href={event.registerUrl} target="_blank" rel="noopener" class="btn-grad">참관 신청하기 <span aria-hidden="true">›</span></a>
+        {registerForm.action ? (
+          <a href="#register" data-open-register class="btn-grad">참관 신청하기 <span aria-hidden="true">›</span></a>
         ) : (
           <span class="btn-grad cursor-default">참관 신청 · 오픈 예정 <span aria-hidden="true">›</span></span>
         )}
-        <a href="#program" class="btn-grad">프로그램 보기 <span aria-hidden="true">›</span></a>
-      </div>
+        <a href="#program" class="btn-grad">프로그램 보기 <span aria-hidden="true">›</span></a>      </div>
     </div>
 
     <!-- 세 학회의 연결을 표현한 노드 그래프 일러스트 -->

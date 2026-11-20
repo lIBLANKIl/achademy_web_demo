@@ -1,11 +1,12 @@
 ---
-const nav = [
+const nav: { href: string; label: string; modal?: boolean }[] = [
   { href: "#about", label: "소개" },
   { href: "#clubs", label: "참여 학회" },
   { href: "#program", label: "프로그램" },
   { href: "#projects", label: "발표 프로젝트" },
   { href: "#booths", label: "부스 안내" },
   { href: "#faq", label: "FAQ" },
+  { href: "#register", label: "참관 신청", modal: true },
 ];
 ---
 
@@ -28,7 +29,7 @@ const nav = [
     <nav aria-label="주요 메뉴" class="hidden lg:block">
       <ul class="flex items-center gap-8 text-[15px] font-bold text-ink">
         {nav.map((n) => (
-          <li><a href={n.href} class="transition-colors hover:text-muted">{n.label}</a></li>
+          <li><a href={n.href} data-open-register={n.modal ? "" : undefined} class="transition-colors hover:text-muted">{n.label}</a></li>
         ))}
       </ul>
     </nav>
@@ -48,7 +49,7 @@ const nav = [
   <nav id="mobile-menu" aria-label="모바일 메뉴" class="hidden border-t border-ink/10 bg-white lg:hidden">
     <ul class="wrap py-2 text-lg font-bold">
       {nav.map((n) => (
-        <li class="border-b border-ink/10 last:border-0"><a href={n.href} class="block py-3.5">{n.label}</a></li>
+        <li class="border-b border-ink/10 last:border-0"><a href={n.href} data-open-register={n.modal ? "" : undefined} class="block py-3.5">{n.label}</a></li>
       ))}
     </ul>
   </nav>

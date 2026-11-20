@@ -1,0 +1,225 @@
+---
+import { event, registerForm, clubs } from "../data/event";
+
+const logoBase = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}logos/`;
+const R = 38; // 미니 그래프 노드 반지름
+const nodes = [
+  { id: "skkai", cx: 74, cy: 74 },
+  { id: "brain", cx: 226, cy: 62 },
+  { id: "dscover", cx: 150, cy: 170 },
+].map((n) => ({ ...n, club: clubs.find((c) => c.id === n.id) }));
+
+// 밑줄형 입력칸: 상자 대신 선으로 구분해 메인 페이지의 구분선 문법과 맞춘다
+const field =
+  "w-full rounded-none border-0 border-b border-ink bg-transparent px-0 py-3 text-lg outline-none transition-colors placeholder:text-soft focus-visible:bg-mist/60 focus-visible:shadow-[0_1px_0_0_var(--color-ink)]";
+const label = "block text-sm font-bold";
+---
+
+{/* 신청 폼 팝업. [data-open-register] 가 붙은 링크를 누르면 열린다 */}
+<dialog
+  id="register"
+  aria-labelledby="register-title"
+  class="relative m-auto max-h-[92dvh] w-[min(94vw,58rem)] overflow-y-auto border border-ink bg-white text-ink outline-none backdrop:bg-ink/60"
+>
+  <button
+    type="button"
+    data-close-register
+    class="absolute top-3 right-3 z-10 inline-flex h-10 items-center gap-2 rounded-[3px] border border-ink bg-white px-4 text-[15px] font-semibold"
+  >
+    닫기 <span aria-hidden="true">✕</span>
+  </button>
+
+  <div class="grid md:grid-cols-[0.85fr_1.15fr]">
+    {/* 왼쪽: 첫 화면과 같은 그라데이션 패널 */}
+    <div class="bg-hero flex flex-col justify-between gap-8 border-b border-ink px-6 pt-8 pb-8 sm:px-8 md:border-r md:border-b-0 md:px-10 md:py-12">
+      <div>
+        <h2 id="register-title" class="display pr-24 text-[clamp(2.4rem,7vw,3.75rem)] md:pr-0">
+          참관<br class="hidden md:block" /> 신청
+        </h2>
+        <p class="mt-5 text-xl font-extrabold tracking-tight">{event.date}</p>
+        <p class="mt-1 font-medium text-muted">등록 11:30 · 행사 12:00 시작</p>
+        <p class="mt-5 max-w-xs text-sm leading-relaxed text-muted">
+          입력하신 정보는 신청자 확인과 행사 안내 발송에만 사용합니다. 제출 후 장소와 입장 방법 등 세부 안내를 이메일로 보내드립니다.
+        </p>
+        {event.registerUrl && (
+          <p class="mt-3 text-sm text-pretty text-muted">
+            신청서가 열리지 않으면 <a href={event.registerUrl} target="_blank" rel="noopener" class="font-semibold text-ink underline underline-offset-4">구글 폼에서 직접 신청</a>해 주세요.
+          </p>
+        )}
+      </div>
+
+      {/* 세 학회를 잇는 미니 그래프 (첫 화면 그림의 축소판) */}
+      <svg viewBox="0 0 300 230" class="mx-auto hidden w-full max-w-[300px] md:block" role="img" aria-label="SKKAI, brAIn, DScover 세 학회를 잇는 연결 그래프">
+        <defs>
+          <linearGradient id="rg-stripe" x1="0" x2="1">
+            <stop offset="0" stop-color="#d4e87a" /><stop offset="1" stop-color="#a3dcef" />
+          </linearGradient>
+        </defs>
+        <path d="M74 74 L226 62 L150 170 Z" fill="url(#rg-stripe)" fill-opacity=".35" />
+        <g fill="none" stroke="#0a0d12" stroke-width="1.6">
+          <path d="M74 74 L226 62" /><path d="M74 74 L150 170" /><path d="M226 62 L150 170" />
+          <path d="M226 62 L282 24" stroke-opacity=".5" /><path d="M74 74 L22 40" stroke-opacity=".5" /><path d="M150 170 L214 214" stroke-opacity=".5" />
+        </g>
+        <g stroke="#0a0d12" stroke-width="1.6" fill="#fff">
+          <circle cx="282" cy="24" r="5" /><circle cx="22" cy="40" r="5" /><circle cx="214" cy="214" r="5" />
+        </g>
+        {nodes.map((n) => (
+          <g>
+            <clipPath id={`rc-${n.id}`}><circle cx={n.cx} cy={n.cy} r={R} /></clipPath>
+            <circle cx={n.cx} cy={n.cy} r={R} fill="#fff" />
+            {n.club?.logo && (
+              n.club.logoFit === "contain" ? (
+                <image href={`${logoBase}${n.club.logo}`} x={n.cx - R * 0.8} y={n.cy - R * 0.8} width={R * 1.6} height={R * 1.6} preserveAspectRatio="xMidYMid meet" />
+              ) : (
+                <image href={`${logoBase}${n.club.logo}`} x={n.cx - R} y={n.cy - R} width={R * 2} height={R * 2} preserveAspectRatio="xMidYMid slice" clip-path={`url(#rc-${n.id})`} />
+              )
+            )}
+            <circle cx={n.cx} cy={n.cy} r={R} fill="none" stroke="#0a0d12" stroke-width="1.6" />
+          </g>
+        ))}
+      </svg>
+    </div>
+
+    {/* 오른쪽: 폼 */}
+    <div class="px-6 pt-8 pb-8 sm:px-8 md:px-10 md:py-12">
+      <form
+        id="reg-form"
+        novalidate
+        data-action={registerForm.action}
+        data-entries={JSON.stringify(registerForm.entries)}
+        class="md:mt-8"
+      >
+        <div class="pb-5">
+          <label for="reg-name" class={label}>이름</label>
+          <input id="reg-name" name="name" type="text" required autocomplete="name" placeholder="신청자 본인 이름" class={field} />
+        </div>
+
+        <div class="py-5">
+          <label for="reg-email" class={label}>이메일</label>
+          <input id="reg-email" name="email" type="email" required autocomplete="email" placeholder="행사 안내를 받을 주소" class={field} />
+        </div>
+
+        <div class="py-5">
+          <label for="reg-dept" class={label}>학과</label>
+          <input id="reg-dept" name="department" type="text" required placeholder="재학 중인 학과" class={field} />
+        </div>
+
+        <div class="py-5">
+          <label for="reg-memo" class={label}>문의·요청 사항 <span class="font-medium text-soft">(선택)</span></label>
+          <textarea id="reg-memo" name="memo" rows="2" placeholder="궁금한 점이나 요청할 내용" class={`${field} resize-none`}></textarea>
+        </div>
+
+        <div class="py-5">
+          <label class="flex cursor-pointer items-start gap-3">
+            <input type="checkbox" name="consent" required class="mt-1 size-5 shrink-0 accent-ink" />
+            <span>
+              <span class="block text-sm font-bold">개인정보 수집·이용에 동의합니다 (필수)</span>
+              <span class="mt-1 block text-[13px] leading-relaxed text-muted">
+                수집 항목: 이름, 이메일, 학과, 문의 사항<br />
+                이용 목적: 신청자 확인, 행사 안내 발송<br />
+                {registerForm.privacyRetention && <>보유 기간: {registerForm.privacyRetention}<br /></>}
+                동의하지 않을 수 있으며, 이 경우 신청이 제한됩니다.
+              </span>
+            </span>
+          </label>
+        </div>
+
+        <div class="pt-3">
+          <p id="reg-notice" role="alert" hidden class="mb-4 border border-ink bg-white px-4 py-3 text-[15px] font-medium"></p>
+          <button type="submit" class="btn-grad w-full justify-center py-4 text-base">신청하기 <span aria-hidden="true">›</span></button>
+        </div>
+      </form>
+
+      <div id="reg-done" tabindex="-1" hidden class="outline-none md:mt-8">
+        <p class="display text-3xl sm:text-4xl">신청이<br />제출되었습니다.</p>
+        <p class="mt-5 max-w-sm leading-relaxed text-muted">입력하신 이메일로 세부 안내를 보내드립니다. 며칠이 지나도 안내가 없으면 문의해 주세요.</p>
+      </div>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  const form = document.getElementById("reg-form") as HTMLFormElement | null;
+  if (form) {
+    const action = form.dataset.action ?? "";
+    const entries = JSON.parse(form.dataset.entries ?? "{}") as Record<string, string>;
+    const notice = document.getElementById("reg-notice") as HTMLElement;
+    const done = document.getElementById("reg-done") as HTMLElement;
+    const btn = form.querySelector<HTMLButtonElement>("button[type=submit]")!;
+    const submitLabel = btn.innerHTML;
+
+    // ── 팝업 열기/닫기 ──
+    const dlg = document.getElementById("register") as HTMLDialogElement;
+    const openDialog = () => {
+      if (dlg.open) return;
+      if (!done.hidden) {
+        // 제출을 마친 뒤 다시 열면 빈 폼으로 시작한다
+        form.reset();
+        form.hidden = false;
+        done.hidden = true;
+        btn.disabled = false;
+        btn.innerHTML = submitLabel;
+      }
+      notice.hidden = true;
+      dlg.showModal();
+      dlg.scrollTop = 0;
+      document.documentElement.style.overflow = "hidden"; // 뒤 화면 스크롤 잠금
+    };
+    dlg.addEventListener("close", () => {
+      document.documentElement.style.overflow = "";
+      if (location.hash === "#register") history.replaceState(null, "", location.pathname + location.search);
+    });
+    dlg.addEventListener("click", (e) => {
+      if (e.target === dlg) dlg.close(); // 바깥(어두운 배경) 클릭
+    });
+    dlg.querySelector("[data-close-register]")?.addEventListener("click", () => dlg.close());
+    document.addEventListener("click", (e) => {
+      const trigger = (e.target as Element).closest("[data-open-register]");
+      if (trigger) {
+        e.preventDefault();
+        openDialog();
+      }
+    });
+    if (location.hash === "#register") openDialog();
+
+    const show = (msg: string) => {
+      notice.textContent = msg;
+      notice.hidden = false;
+    };
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      notice.hidden = true;
+      if (!form.reportValidity()) return;
+
+      const connected = action && Object.values(entries).every(Boolean);
+      if (!connected) {
+        show("미리보기입니다. 신청 접수가 아직 연결되지 않아 제출되지 않았습니다.");
+        return;
+      }
+
+      const v = new FormData(form);
+      const text = (k: string) => String(v.get(k) ?? "").trim();
+      const body = new URLSearchParams();
+      body.set(entries.consent, "동의합니다");
+      body.set(entries.name, text("name"));
+      body.set(entries.email, text("email"));
+      body.set(entries.department, text("department"));
+      if (text("memo")) body.set(entries.memo, text("memo"));
+
+      btn.disabled = true;
+      btn.textContent = "제출 중…";
+      try {
+        // 구글 폼은 응답 내용을 돌려주지 않아(no-cors) 전송 요청까지만 확인할 수 있다
+        await fetch(action, { method: "POST", mode: "no-cors", credentials: "include", body });
+        form.hidden = true;
+        done.hidden = false;
+        done.focus();
+      } catch {
+        show("제출하지 못했습니다. 네트워크를 확인하고 다시 시도하거나, 구글 폼 링크로 신청해 주세요.");
+        btn.disabled = false;
+        btn.innerHTML = submitLabel;
+      }
+    });
+  }
+</script>

@@ -13,8 +13,25 @@ export const event = {
   venue: "성균관대학교 교내 행사 공간",
   venueNote: "장소 추후 확정",
   // 신청 링크가 생기면 URL을 넣으세요. 비어 있으면 버튼이 "오픈 예정"으로 표시됩니다.
-  registerUrl: "",
+  registerUrl: "https://docs.google.com/forms/d/e/1FAIpQLScoaHtgIsFvj11JPM0bBA5bQxIPmUDmy3v0KME2skct1AIWeA/viewform",
   contactEmail: "",
+};
+
+// ── 참관 신청 폼 (사이트 팝업 → 구글 폼으로 전송) ───────────────
+// action: 구글 폼 신청 링크의 .../viewform 을 .../formResponse 로 바꾼 주소
+// entries: 각 문항의 entry.숫자 (docs/create_form.gs 의 printEntryIds 실행 결과)
+// 모든 값이 채워지기 전에는 "미리보기"로 동작하며 실제로 전송하지 않습니다.
+export const registerForm = {
+  action: "https://docs.google.com/forms/d/e/1FAIpQLScoaHtgIsFvj11JPM0bBA5bQxIPmUDmy3v0KME2skct1AIWeA/formResponse",
+  entries: {
+    consent: "entry.823503321", // 개인정보 수집·이용 동의
+    name: "entry.201651801", // 이름
+    email: "entry.1109387544", // 이메일
+    department: "entry.1693772254", // 학과
+    memo: "entry.1682746841", // 문의·요청 사항
+  },
+  // 개인정보 보유 기간 (확정 후 입력, 예: "행사 종료 후 30일 이내 파기")
+  privacyRetention: "",
 };
 
 export const stats = [
