@@ -1,6 +1,8 @@
 ---
 import { formats, clubs } from "../data/event";
 
+const logoBase = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}logos/`;
+
 // 행사 구성별 아이콘 (그라데이션 원 + 라인 드로잉)
 const icons = [
   // 성과발표회: 전시 보드
@@ -47,13 +49,24 @@ const icons = [
           <li class="text-center">
             <div
               class:list={[
-                "mx-auto grid aspect-square w-48 place-items-center rounded-full sm:w-56",
-                i === 0 && "bg-grad text-ink",
-                i === 1 && "bg-white text-ink",
-                i === 2 && "border-2 border-white/80 text-white",
+                "mx-auto grid aspect-square w-48 place-items-center overflow-hidden rounded-full sm:w-56",
+                c.logo && c.logoFit === "contain" && "bg-white p-7",
+                c.logo && c.logoFit !== "contain" && "bg-white",
+                !c.logo && i === 0 && "bg-grad text-ink",
+                !c.logo && i === 1 && "bg-white text-ink",
+                !c.logo && i === 2 && "border-2 border-white/80 text-white",
               ]}
             >
-              <span class="display text-3xl sm:text-4xl">{c.name}</span>
+              {c.logo ? (
+                <img
+                  src={`${logoBase}${c.logo}`}
+                  alt={`${c.name} 로고`}
+                  loading="lazy"
+                  class:list={["size-full", c.logoFit === "contain" ? "object-contain" : "object-cover"]}
+                />
+              ) : (
+                <span class="display text-3xl sm:text-4xl">{c.name}</span>
+              )}
             </div>
             <p class="mt-6 text-lg font-bold tracking-[0.06em]">{c.name}</p>
             <p class="mt-1 text-sm tracking-[0.04em] text-white/70">{c.fullName}</p>

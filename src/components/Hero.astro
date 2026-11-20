@@ -1,5 +1,13 @@
 ---
-import { event, purposes, stats } from "../data/event";
+import { event, purposes, stats, clubs } from "../data/event";
+
+const logoBase = `${import.meta.env.BASE_URL.replace(/\/?$/, "/")}logos/`;
+const R = 64; // 노드 반지름 (로고가 잘 보이도록 기존 58에서 키움)
+const nodes = [
+  { id: "skkai", cx: 150, cy: 140 },
+  { id: "brain", cx: 370, cy: 120 },
+  { id: "dscover", cx: 270, cy: 330 },
+].map((n) => ({ ...n, club: clubs.find((c) => c.id === n.id) }));
 ---
 
 <div id="top" class="bg-hero">
@@ -63,12 +71,31 @@ import { event, purposes, stats } from "../data/event";
 
       <!-- 세 학회 노드 -->
       <g font-family="Pretendard Variable, Pretendard, sans-serif" font-weight="800" text-anchor="middle">
-        <circle cx="150" cy="140" r="58" fill="url(#g-node)" stroke="#0a0d12" stroke-width="2" />
-        <text x="150" y="147" font-size="21" fill="#0a0d12">SKKAI</text>
-        <circle cx="370" cy="120" r="58" fill="#fff" stroke="#0a0d12" stroke-width="2" />
-        <text x="370" y="127" font-size="21" fill="#0a0d12">brAIn</text>
-        <circle cx="270" cy="330" r="58" fill="#0a0d12" />
-        <text x="270" y="337" font-size="20" fill="#fff">DScover</text>
+        {nodes.map((n) => (
+          <g>
+            <clipPath id={`clip-${n.id}`}><circle cx={n.cx} cy={n.cy} r={R} /></clipPath>
+            <circle cx={n.cx} cy={n.cy} r={R} fill="#fff" />
+            {n.club?.logo ? (
+              n.club.logoFit === "contain" ? (
+                <image
+                  href={`${logoBase}${n.club.logo}`}
+                  x={n.cx - R * 0.8} y={n.cy - R * 0.8} width={R * 1.6} height={R * 1.6}
+                  preserveAspectRatio="xMidYMid meet"
+                />
+              ) : (
+                <image
+                  href={`${logoBase}${n.club.logo}`}
+                  x={n.cx - R} y={n.cy - R} width={R * 2} height={R * 2}
+                  preserveAspectRatio="xMidYMid slice"
+                  clip-path={`url(#clip-${n.id})`}
+                />
+              )
+            ) : (
+              <text x={n.cx} y={n.cy + 7} font-size="21" fill="#0a0d12">{n.club?.name}</text>
+            )}
+            <circle cx={n.cx} cy={n.cy} r={R} fill="none" stroke="#0a0d12" stroke-width="2" />
+          </g>
+        ))}
       </g>
     </svg>
   </section>

@@ -127,6 +127,10 @@ export interface Club {
   field: string;
   description: string;
   url?: string;
+  // public/logos/ 안의 파일명. 없으면 학회 이름 글자로 대체됩니다.
+  logo?: string;
+  // cover: 정사각형 로고를 원에 꽉 채움 / contain: 투명 배경 로고를 흰 원 안에 맞춤
+  logoFit?: "cover" | "contain";
 }
 
 export const clubs: Club[] = [
@@ -137,6 +141,8 @@ export const clubs: Club[] = [
     affiliation: "성균관대학교",
     field: "인공지능",
     description: "학회 소개 문구가 들어갈 자리입니다. 주요 활동과 연구 분야를 2~3문장으로 적어 주세요.",
+    logo: "skkai.jpg",
+    logoFit: "cover",
   },
   {
     id: "brain",
@@ -145,6 +151,8 @@ export const clubs: Club[] = [
     affiliation: "성균관대학교 글로벌융합학부",
     field: "인공지능",
     description: "학회 소개 문구가 들어갈 자리입니다. 주요 활동과 연구 분야를 2~3문장으로 적어 주세요.",
+    logo: "brain.jpg",
+    logoFit: "cover",
   },
   {
     id: "dscover",
@@ -153,6 +161,8 @@ export const clubs: Club[] = [
     affiliation: "성균관대학교 글로벌융합학부",
     field: "데이터 분석",
     description: "학회 소개 문구가 들어갈 자리입니다. 주요 활동과 연구 분야를 2~3문장으로 적어 주세요.",
+    logo: "dscover.png",
+    logoFit: "contain",
   },
 ];
 
