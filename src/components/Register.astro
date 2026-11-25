@@ -29,7 +29,7 @@ const label = "block text-sm font-bold";
     닫기 <span aria-hidden="true">✕</span>
   </button>
 
-  <div class="grid md:grid-cols-[0.85fr_1.15fr]">
+  <div class="grid md:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
     {/* 왼쪽: 첫 화면과 같은 그라데이션 패널 */}
     <div class="bg-hero flex flex-col justify-between gap-8 border-b border-ink px-6 pt-8 pb-8 sm:px-8 md:border-r md:border-b-0 md:px-10 md:py-12">
       <div>
@@ -81,7 +81,7 @@ const label = "block text-sm font-bold";
     </div>
 
     {/* 오른쪽: 폼 */}
-    <div class="px-6 pt-8 pb-8 sm:px-8 md:px-10 md:py-12">
+    <div class="min-w-0 px-6 pt-8 pb-8 sm:px-8 md:px-10 md:py-12">
       <form
         id="reg-form"
         novalidate
@@ -91,22 +91,22 @@ const label = "block text-sm font-bold";
       >
         <div class="pb-5">
           <label for="reg-name" class={label}>이름</label>
-          <input id="reg-name" name="name" type="text" required autocomplete="name" placeholder="신청자 본인 이름" class={field} />
+          <input id="reg-name" name="name" type="text" required maxlength="50" autocomplete="name" placeholder="신청자 본인 이름" class={field} />
         </div>
 
         <div class="py-5">
           <label for="reg-email" class={label}>이메일</label>
-          <input id="reg-email" name="email" type="email" required autocomplete="email" placeholder="행사 안내를 받을 주소" class={field} />
+          <input id="reg-email" name="email" type="email" required maxlength="100" autocomplete="email" placeholder="행사 안내를 받을 주소" class={field} />
         </div>
 
         <div class="py-5">
           <label for="reg-dept" class={label}>학과</label>
-          <input id="reg-dept" name="department" type="text" required placeholder="재학 중인 학과" class={field} />
+          <input id="reg-dept" name="department" type="text" required maxlength="50" placeholder="재학 중인 학과" class={field} />
         </div>
 
         <div class="py-5">
           <label for="reg-memo" class={label}>문의·요청 사항 <span class="font-medium text-soft">(선택)</span></label>
-          <textarea id="reg-memo" name="memo" rows="1" placeholder="궁금한 점이나 요청할 내용" class={`${field} field-sizing-content max-h-40 resize-none`}></textarea>
+          <textarea id="reg-memo" name="memo" rows="1" maxlength="500" placeholder="궁금한 점이나 요청할 내용" class={`${field} field-sizing-content max-h-40 resize-none [overflow-wrap:anywhere]`}></textarea>
         </div>
 
         <div class="py-5">
@@ -122,6 +122,11 @@ const label = "block text-sm font-bold";
               </span>
             </span>
           </label>
+        </div>
+
+        {/* 봇 방지용 숨은 칸: 사람은 못 보고, 봇이 채우면 제출을 보내지 않는다 */}
+        <div aria-hidden="true" class="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+          <label>웹사이트 <input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
         </div>
 
         <div class="pt-3">
@@ -200,6 +205,14 @@ const label = "block text-sm font-bold";
 
       const v = new FormData(form);
       const text = (k: string) => String(v.get(k) ?? "").trim();
+
+      // 숨은 칸이 채워져 있으면 봇이므로 보내지 않고 성공한 것처럼 보여 준다
+      if (text("website")) {
+        form.hidden = true;
+        done.hidden = false;
+        return;
+      }
+
       const body = new URLSearchParams();
       body.set(entries.consent, "동의합니다");
       body.set(entries.name, text("name"));
