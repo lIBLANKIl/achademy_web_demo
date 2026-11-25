@@ -44,7 +44,7 @@ const icons = [
       <h2 class="h-section">참여 학회</h2>
       <p class="mt-4 max-w-2xl text-white/65">세 학회 운영진 12명 이상이 함께 기획·운영합니다. 학회 소개는 당일 키노트에 이어 진행됩니다.</p>
 
-      <ul class="mt-14 grid gap-14 sm:grid-cols-2 lg:grid-cols-3">
+      <ul class="mt-14 grid gap-x-20 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
         {clubs.map((c, i) => (
           <li class="text-center">
             <div
@@ -71,7 +71,7 @@ const icons = [
             <p class="mt-6 text-lg font-bold tracking-[0.06em]">{c.name}</p>
             <p class="mt-1 text-sm tracking-[0.04em] text-white/70">{c.fullName}</p>
             <p class="text-sm tracking-[0.04em] text-white/45">{c.affiliation}</p>
-            <p class="mx-auto mt-4 max-w-xs text-[15px] leading-relaxed text-white/60">{c.description}</p>
+            <p class="mx-auto mt-4 max-w-[22rem] text-sm leading-relaxed text-white/60">{c.description}</p>
             {c.url && <a href={c.url} target="_blank" rel="noopener" class="mt-4 inline-block text-sm font-semibold underline underline-offset-4">학회 페이지 ›</a>}
           </li>
         ))}
